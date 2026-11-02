@@ -59,7 +59,8 @@ setTimeout(function(){if(!window.__animOK){var h=document.documentElement;h.clas
   .top nav a:hover::after{transform:scaleX(1)}
   .top .right{display:flex;align-items:center;gap:10px}
   .top .btn{min-height:44px;padding:0 16px;border-radius:12px;font-size:.92rem}
-  .menu-btn{display:inline-flex;align-items:center;min-height:44px;padding:0 14px;border-radius:12px;border:2px solid var(--ink);background:transparent;font:700 .9rem var(--body);color:var(--ink);cursor:pointer}
+  .menu-btn{display:inline-flex;flex-direction:column;justify-content:center;align-items:center;gap:5px;width:44px;height:44px;padding:0;border:0;border-radius:12px;background:transparent;cursor:pointer}
+  .menu-btn span{display:block;width:24px;height:2.5px;border-radius:2px;background:var(--ink)}
   .top .wpp-top{display:none}
   @media(min-width:1000px){.top nav{display:flex}.menu-btn{display:none}.top .wpp-top{display:inline-flex}}
   .pulse{height:44px;width:100%;display:flex;align-items:flex-end;padding-bottom:4px;border-top:1px solid var(--line)}
@@ -266,7 +267,6 @@ setTimeout(function(){if(!window.__animOK){var h=document.documentElement;h.clas
   .abre .linha .cheio{fill:var(--marca);opacity:0}
   .abre .marca{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);background:var(--bg);line-height:0;clip-path:inset(50% 0 50% 0)}
   .abre .marca img{height:min(42vh,320px);width:auto;mix-blend-mode:multiply}
-  .abre .pular{position:absolute;right:calc(16px + env(safe-area-inset-right));bottom:calc(18px + env(safe-area-inset-bottom));min-height:44px;padding:0 16px;border-radius:12px;border:2px solid var(--ink);background:transparent;font:700 .85rem var(--body);color:var(--ink);cursor:pointer}
   .js:not(.rm) [data-r]{opacity:0;transform:translateY(26px)}
   html.lenis,html.lenis body{height:auto}.lenis.lenis-smooth{scroll-behavior:auto!important}.lenis.lenis-stopped{overflow:hidden}.lenis.lenis-smooth iframe{pointer-events:none}
 </style>
@@ -276,7 +276,6 @@ setTimeout(function(){if(!window.__animOK){var h=document.documentElement;h.clas
 <div class="abre" aria-hidden="true">
   <svg class="linha"><path class="tra"/><path class="cheio"/></svg>
   <div class="marca"><img src="logo-original.webp" alt=""></div>
-  <button class="pular" type="button" tabindex="-1">Pular</button>
 </div>
 
 <header class="top">
@@ -285,7 +284,7 @@ setTimeout(function(){if(!window.__animOK){var h=document.documentElement;h.clas
     <nav aria-label="Seções"><a href="#modalidades">Modalidades</a><a href="#horarios">Horários</a><a href="#ambiente">Ambiente</a><a href="#planos">Planos</a><a href="#como-chegar">Como chegar</a></nav>
     <div class="right">
       <a class="btn btn-red wpp-top" href="https://wa.me/5511993894636?text=Oi!%20Vi%20o%20site%20da%20Love%20Academia%20e%20quero%20agendar%20minha%20aula%20experimental." target="_blank" rel="noopener">WhatsApp</a>
-      <button class="menu-btn" type="button" aria-expanded="false" aria-controls="mmenu">Menu</button>
+      <button class="menu-btn" type="button" aria-expanded="false" aria-controls="mmenu" aria-label="Abrir menu"><span></span><span></span><span></span></button>
     </div>
   </div>
   <div class="pulse" aria-hidden="true"><canvas id="ecg"></canvas><span class="cor"><svg viewBox="2 3 20 18.35"><path d="M12 21.35 L10.55 20.03 C5.4 15.36 2 12.28 2 8.5 C2 5.42 4.42 3 7.5 3 C9.24 3 10.91 3.81 12 5.09 C13.09 3.81 14.76 3 16.5 3 C19.58 3 22 5.42 22 8.5 C22 12.28 18.6 15.36 13.45 20.04 L12 21.35 Z"/></svg></span></div>
