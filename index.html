@@ -265,8 +265,8 @@ setTimeout(function(){if(!window.__animOK){var h=document.documentElement;h.clas
   .abre .linha{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
   .abre .linha .tra{fill:none;stroke:var(--marca);stroke-width:2.6;stroke-linejoin:round;stroke-linecap:round}
   .abre .linha .cheio{fill:var(--marca);opacity:0}
-  .abre .marca{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);background:var(--bg);line-height:0;clip-path:inset(50% 0 50% 0)}
-  .abre .marca img{height:min(42vh,320px);width:auto;mix-blend-mode:multiply}
+  .abre .marca{position:absolute;left:50%;top:50%;width:min(72vw,calc(min(42vh,320px) * .8152));transform:translate(-50%,-50%);background:var(--bg);line-height:0;clip-path:inset(50% 0 50% 0)}
+  .abre .marca img{display:block;width:100%;height:auto;max-width:none;mix-blend-mode:multiply}
   .js:not(.rm) [data-r]{opacity:0;transform:translateY(26px)}
   html.lenis,html.lenis body{height:auto}.lenis.lenis-smooth{scroll-behavior:auto!important}.lenis.lenis-stopped{overflow:hidden}.lenis.lenis-smooth iframe{pointer-events:none}
 </style>
@@ -547,7 +547,9 @@ setTimeout(function(){if(!window.__animOK){var h=document.documentElement;h.clas
   const ZIG_DIR = ZIG.slice().reverse().map(([x, y]) => [-x, y]);
   const CORACAO = 'M12 21.35 L10.55 20.03 C5.4 15.36 2 12.28 2 8.5 C2 5.42 4.42 3 7.5 3 C9.24 3 10.91 3.81 12 5.09 C13.09 3.81 14.76 3 16.5 3 C19.58 3 22 5.42 22 8.5 C22 12.28 18.6 15.36 13.45 20.04 L12 21.35 Z';
   // coração de largura s centrado em (cx, by); a linha de base cruza o coração na metade, como na logo
-  const coracaoEm = (cx, by, s) => CORACAO.replace(/(-?[\d.]+) (-?[\d.]+)/g, (m, x, y) => (cx + (x - 12) * s / 20).toFixed(1) + ' ' + (by + (y - 12.5) * s / 20).toFixed(1));
+  // coração da abertura: o formato do ícone que o Ygor mandou (gomos altos, entalhe raso e ponta longa e fina)
+  const CORACAO_ABRE = 'M12 22 C9.5 19.5 2 13 2 8.2 C2 4.6 4.3 2 7.2 2 C9.3 2 11 3.2 12 4.6 C13 3.2 14.7 2 16.8 2 C19.7 2 22 4.6 22 8.2 C22 13 14.5 19.5 12 22 Z';
+  const coracaoEm = (cx, by, s, forma = CORACAO) => forma.replace(/(-?[\d.]+) (-?[\d.]+)/g, (m, x, y) => (cx + (x - 12) * s / 20).toFixed(1) + ' ' + (by + (y - 12.5) * s / 20).toFixed(1));
   const zigue = (pts, cx, by, s) => pts.map(([x, y]) => ' L ' + (cx + x * s).toFixed(1) + ' ' + (by + y * s).toFixed(1)).join('');
 
   // divisórias entre as seções: um eletrocardiograma de verdade (onda P, complexo QRS e onda T),
@@ -620,14 +622,15 @@ setTimeout(function(){if(!window.__animOK){var h=document.documentElement;h.clas
     try { sessionStorage.setItem('love-abre', '1'); } catch (e) {}
     if (lenis) lenis.stop();
     // desenha no tamanho da tela o eletrocardiograma da logo: linha reta, zigue-zague, o contorno do coração, zigue-zague e linha até a outra ponta
-    const W = innerWidth, H = innerHeight, cx = W / 2, sz = Math.min(W * .24, 190), by = H / 2;
+    // a linha de base cruza o coração na metade, como na logo (só o formato do coração mudou)
+    const W = innerWidth, H = innerHeight, cx = W / 2, sz = Math.min(W * .24, 190), by = H / 2, hy = by, ya = by;
     const svg = abre.querySelector('.linha'); svg.setAttribute('viewBox', '0 0 ' + W + ' ' + H);
     const tra = svg.querySelector('.tra'), cheio = svg.querySelector('.cheio');
-    cheio.setAttribute('d', coracaoEm(cx, by, sz));
+    cheio.setAttribute('d', coracaoEm(cx, hy, sz, CORACAO_ABRE));
     // o contorno é amostrado a partir do ponto em que a linha de base encosta no lado esquerdo do coração
     const N = 200, Lc = cheio.getTotalLength(), pts = [];
     for (let n = 0; n < N; n++) { const p = cheio.getPointAtLength(n / N * Lc); pts.push([p.x, p.y]); }
-    const lado = (dir) => pts.reduce((m, p, i) => ((p[0] - cx) * dir > 0 && Math.abs(p[1] - by) < Math.abs(pts[m][1] - by)) ? i : m, pts.findIndex((p) => (p[0] - cx) * dir > 0));
+    const lado = (dir) => pts.reduce((m, p, i) => ((p[0] - cx) * dir > 0 && Math.abs(p[1] - ya) < Math.abs(pts[m][1] - ya)) ? i : m, pts.findIndex((p) => (p[0] - cx) * dir > 0));
     const e = lado(-1), dd = pts[lado(1)];
     let contorno = '';
     for (let n = 0; n <= N; n++) { const p = pts[(e + n) % N]; contorno += ' L ' + p[0].toFixed(1) + ' ' + p[1].toFixed(1); }
@@ -671,11 +674,16 @@ setTimeout(function(){if(!window.__animOK){var h=document.documentElement;h.clas
   // costura: a linha de batimento da logo desce pela margem conforme a rolagem
   const main = document.querySelector('main'), cost = document.querySelector('.costura');
   const desenharCostura = () => {
-    const H = main.scrollHeight, W = main.clientWidth, x = desk ? Math.max(24, (W - Math.min(1200, W - 96)) / 2 - 28) : 7;
-    let d = 'M' + x + ' 0';
+    // a linha mora na margem real entre a borda da tela e o conteúdo (medida a cada redimensionamento),
+    // e o tamanho dos picos se ajusta a essa margem: assim ela nunca encosta nos textos, em nenhuma largura
+    const H = main.scrollHeight, W = main.clientWidth;
+    const ref = document.querySelector('main section.pad .wrap');
+    const margem = ref ? ref.getBoundingClientRect().left - main.getBoundingClientRect().left : 16;
+    const amp = Math.max(5, Math.min(22, margem * .5)), x = Math.max(3, margem - amp - 6), n = Math.min(7, amp * .6);
+    let d = 'M' + x.toFixed(1) + ' 0';
     document.querySelectorAll('main section.pad h2').forEach((h) => {
       let y = h.offsetHeight / 2; for (let el = h; el && el !== main; el = el.offsetParent) y += el.offsetTop;
-      d += ' V' + (y - 26) + ' l7 6 l-7 6 l' + (desk ? 22 : 9) + ' 14 l-' + (desk ? 22 : 9) + ' 14 V' + (y + 26);
+      d += ' V' + (y - 26) + ' l' + n + ' 6 l-' + n + ' 6 l' + amp + ' 14 l-' + amp + ' 14 V' + (y + 26);
     });
     d += ' V' + document.getElementById('final').offsetTop;
     cost.setAttribute('height', H); cost.setAttribute('viewBox', '0 0 ' + W + ' ' + H); cost.style.height = H + 'px';
