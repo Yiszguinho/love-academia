@@ -149,7 +149,7 @@ setTimeout(function(){if(!window.__animOK){var h=document.documentElement;h.clas
   .mod .btn{min-height:48px;font-size:.95rem;border-radius:12px}
 
   /* horários */
-  .hours{margin-top:24px;background:var(--card);border:1px solid var(--line);border-radius:24px;padding:22px 16px 18px;overflow:hidden}
+  .hours{margin-top:24px;background:var(--card);border:1px solid var(--line);border-radius:24px;padding:20px 18px;overflow:hidden}
   .hours svg.chart{display:none;width:100%;height:auto;overflow:visible}
   .days{display:grid;gap:8px}
   .day{display:grid;grid-template-columns:62px 1fr auto;align-items:center;gap:10px;font-weight:600}
@@ -160,8 +160,7 @@ setTimeout(function(){if(!window.__animOK){var h=document.documentElement;h.clas
   .day.today .fill{background:var(--marca)}
   .day.today .d{color:var(--marca)}
   .day.today .h{color:var(--ink)}
-  .hours-legend{display:flex;justify-content:space-between;color:var(--muted);font-size:.78rem;margin:2px 0 10px 72px;font-variant-numeric:tabular-nums}
-  @media(min-width:900px){.hours{padding:34px 34px 26px}.hours svg.chart{display:block}.days,.hours-legend{display:none}}
+  @media(min-width:900px){.hours{padding:34px 34px 26px}.hours svg.chart{display:block}.days{display:none}}
   .chart .ecg{fill:none;stroke:var(--salmao);stroke-width:3;stroke-linejoin:round}
   .chart .ecg-hoje{fill:none;stroke:var(--marca);stroke-width:4;stroke-linejoin:round}
   .chart text{font-family:var(--title);font-stretch:110%;font-weight:800;font-size:15px;fill:var(--ink);text-transform:uppercase}
@@ -346,7 +345,6 @@ setTimeout(function(){if(!window.__animOK){var h=document.documentElement;h.clas
       <h2 data-r>Horários</h2>
       <div class="hours" data-r>
         <svg class="chart" viewBox="0 0 1000 250" aria-hidden="true"></svg>
-        <p class="hours-legend" aria-hidden="true"><span>6h</span><span>12h</span><span>18h</span><span>22h</span></p>
         <div class="days"></div>
         <ul class="sr"><li>Segunda a sexta: das 6h às 22h</li><li>Sábado e feriado: das 9h às 15h</li><li>Domingo: das 8h às 13h</li></ul>
       </div>
